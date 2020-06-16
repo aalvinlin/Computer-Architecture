@@ -13,6 +13,7 @@ class CPU:
         # general-purpose registers
         self.registers = [0] * 8
         self.registers[7] = 0xF4    # stack pointer
+        self.sp = self.registers[7] # alias for stack pointer
 
         # internal registers
         self.pc = 0   # program counter
@@ -33,8 +34,16 @@ class CPU:
         def ldi(register, value):
             self.ram[register] = value
 
+        def pop(register):
+            self.ram[register] = self.ram[self.sp]
+            self.sp += 1
+            
         def prn(register):
             print(self.ram[register])
+
+        def push(register):
+            self.sp -= 1
+            self.ram[self.sp] = self.ram[register]
 
         # hold a mapping of instructions to functions
         self.instructions = dict()
@@ -62,10 +71,10 @@ class CPU:
         self.instructions["NOP"] = None
         self.instructions["NOT"] = None
         self.instructions["OR"] = None
-        self.instructions["POP"] = None
+        self.instructions[0b01000110] = pop
         self.instructions["PRA"] = None
         self.instructions[0b01000111] = prn
-        self.instructions["PUSH"] = None
+        self.instructions[0b01000101] = push
         self.instructions["RET"] = None
         self.instructions["SHL"] = None
         self.instructions["SHR"] = None
