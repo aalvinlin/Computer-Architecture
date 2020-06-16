@@ -34,6 +34,9 @@ class CPU:
         def ldi(register, value):
             self.ram[register] = value
 
+        def jmp(register):
+            self.pc = register
+
         def pop(register):
             self.ram[register] = self.ram[self.sp]
             self.sp += 1
@@ -62,7 +65,7 @@ class CPU:
         self.instructions["JGT"] = None
         self.instructions["JLE"] = None
         self.instructions["JLT"] = None
-        self.instructions["JMP"] = None
+        self.instructions["JMP"] = jmp
         self.instructions["JNE"] = None
         self.instructions["LD"] = None
         self.instructions[0b10000010] = ldi
@@ -167,6 +170,13 @@ class CPU:
 
             else:
                 print("Invalid instruction", self.ir)
+                pass
+
+            # determine whether the instruction sets the program counter (specified in 5th bit)
+            fifth_bit_masked = self.ir & 0b00010000
+            modifies_program_counter = fifth_bit_masked >> 4
+
+            if modifies_program_counter:
                 pass
 
             # update program counter to point to the next instruction
