@@ -58,7 +58,7 @@ class CPU:
         self.instructions["LD"] = None
         self.instructions[0b10000010] = ldi
         self.instructions["MOD"] = None
-        self.instructions["MUL"] = None
+        self.instructions[0b10100010] = lambda operand_a, operand_b: self.alu("MUL", operand_a, operand_b)
         self.instructions["NOP"] = None
         self.instructions["NOT"] = None
         self.instructions["OR"] = None
@@ -97,8 +97,13 @@ class CPU:
         """ALU operations."""
 
         if op == "ADD":
-            self.reg[reg_a] += self.reg[reg_b]
-        #elif op == "SUB": etc
+            self.ram[reg_a] += self.ram[reg_b]
+        elif op == "SUB":
+            pass
+        elif op == "MUL":
+            self.ram[reg_a] *= self.ram[reg_b]
+        elif op == "DIV":
+            pass
         else:
             raise Exception("Unsupported ALU operation")
 
