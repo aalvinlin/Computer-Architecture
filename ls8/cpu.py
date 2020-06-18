@@ -28,6 +28,17 @@ class CPU:
 
         # define instructions
         
+        def call(register):
+            # push return location onto stack
+            # this location will be 2 instructions after the stack pointer
+            # self.sp -= 1
+            # self.ram[self.sp] = self.ram[self.pc + 2]
+            push(self.pc + 2)
+
+            # get the address to call
+            register_containing_address = self.ram[self.pc + 1]
+            self.pc = self.ram[register_containing_address]
+
         def hlt():
             self.is_running = False
 
@@ -47,12 +58,16 @@ class CPU:
         def push(register):
             self.sp -= 1
             self.ram[self.sp] = self.ram[register]
+        
+        def ret():
+            self.pc = self.ram[self.sp]
+            self.sp += 1
 
         # hold a mapping of instructions to functions
         self.instructions = dict()
-        self.instructions["ADD"] = None
+        self.instructions[0b10100000] = lambda operand_a, operand_b: self.alu("ADD", operand_a, operand_b)
         self.instructions["AND"] = None
-        self.instructions["CALL"] = None
+        self.instructions[0b01010000] = call
         self.instructions["CMP"] = None
         self.instructions["DEC"] = None
         self.instructions["DIV"] = None
@@ -78,7 +93,7 @@ class CPU:
         self.instructions["PRA"] = None
         self.instructions[0b01000111] = prn
         self.instructions[0b01000101] = push
-        self.instructions["RET"] = None
+        self.instructions[0b00010001] = ret
         self.instructions["SHL"] = None
         self.instructions["SHR"] = None
         self.instructions["ST"] = None
@@ -176,8 +191,8 @@ class CPU:
             fifth_bit_masked = self.ir & 0b00010000
             modifies_program_counter = fifth_bit_masked >> 4
 
-            if modifies_program_counter:
-                pass
-
-            # update program counter to point to the next instruction
-            self.pc += number_of_operands + 1
+            # if the instruction doesn't modify the program counter directly (CALL, RET, JMP, etc.), then increment the program counter automatically
+            if not modifies_program_counter:
+                
+                # update program counter to point to the next instruction
+                self.pc += number_of_operands + 1
