@@ -54,6 +54,9 @@ class CPU:
             self.ram[register] = self.ram[self.sp]
             self.sp += 1
             
+        def pra(register):
+            print(chr(self.ram[register]))
+
         def prn(register):
             print(self.ram[register])
 
@@ -95,7 +98,7 @@ class CPU:
         self.instructions["NOT"] = None
         self.instructions["OR"] = None
         self.instructions[0b01000110] = pop
-        self.instructions["PRA"] = None
+        self.instructions[0b01001000] = pra
         self.instructions[0b01000111] = prn
         self.instructions[0b01000101] = push
         self.instructions[0b00010001] = ret
