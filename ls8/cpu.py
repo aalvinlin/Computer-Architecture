@@ -74,10 +74,10 @@ class CPU:
         self.instructions["AND"] = None
         self.instructions[0b01010000] = call
         self.instructions["CMP"] = None
-        self.instructions["DEC"] = None
+        self.instructions[0b01100110] = lambda operand_a, operand_b: self.alu("DEC", operand_a)
         self.instructions[0b10100011] = lambda operand_a, operand_b: self.alu("DIV", operand_a, operand_b)
         self.instructions[0b00000001] = hlt
-        self.instructions["INC"] = None
+        self.instructions[0b01100101] =  = lambda operand_a, operand_b: self.alu("INC", operand_a)
         self.instructions["INT"] = None
         self.instructions["IRET"] = None
         self.instructions["JEQ"] = None
@@ -146,6 +146,11 @@ class CPU:
                 self.instructions[0b00000001]() # halt
             else:
                 self.ram[reg_a] %= self.ram[reg_b]
+        elif op == "DEC":
+            self.ram[reg_a] -= 1
+        elif op == "INC":
+            self.ram[reg_a] += 1
+
         else:
             raise Exception("Unsupported ALU operation")
 
