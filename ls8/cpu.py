@@ -112,11 +112,11 @@ class CPU:
         self.instructions[0b01100101] = lambda operand_a, operand_b: self.alu("INC", operand_a)
         self.instructions["INT"] = None
         self.instructions["IRET"] = None
-        self.instructions["JEQ"] = jeq
-        self.instructions["JGE"] = None
-        self.instructions["JGT"] = None
-        self.instructions["JLE"] = None
-        self.instructions["JLT"] = None
+        self.instructions[0b01010101] = jeq
+        self.instructions[0b01011010] = jge
+        self.instructions[0b01010111] = jgt
+        self.instructions[0b01011001] = jle
+        self.instructions[0b01011000] = jlt
         self.instructions[0b01010100] = jmp
         self.instructions["JNE"] = None
         self.instructions["LD"] = None
