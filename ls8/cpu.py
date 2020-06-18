@@ -48,7 +48,7 @@ class CPU:
             self.ram[register] = value
 
         def jmp(register):
-            self.pc = register
+            self.pc = self.ram[register]
 
         def pop(register):
             self.ram[register] = self.ram[self.sp]
@@ -80,7 +80,7 @@ class CPU:
         self.instructions[0b01100110] = lambda operand_a, operand_b: self.alu("DEC", operand_a)
         self.instructions[0b10100011] = lambda operand_a, operand_b: self.alu("DIV", operand_a, operand_b)
         self.instructions[0b00000001] = hlt
-        self.instructions[0b01100101] =  = lambda operand_a, operand_b: self.alu("INC", operand_a)
+        self.instructions[0b01100101] = lambda operand_a, operand_b: self.alu("INC", operand_a)
         self.instructions["INT"] = None
         self.instructions["IRET"] = None
         self.instructions["JEQ"] = None
@@ -88,7 +88,7 @@ class CPU:
         self.instructions["JGT"] = None
         self.instructions["JLE"] = None
         self.instructions["JLT"] = None
-        self.instructions["JMP"] = jmp
+        self.instructions[0b01010100] = jmp
         self.instructions["JNE"] = None
         self.instructions["LD"] = None
         self.instructions[0b10000010] = ldi
@@ -149,10 +149,28 @@ class CPU:
                 self.instructions[0b00000001]() # halt
             else:
                 self.ram[reg_a] %= self.ram[reg_b]
+        
         elif op == "DEC":
             self.ram[reg_a] -= 1
         elif op == "INC":
             self.ram[reg_a] += 1
+
+        elif op == "CMP":
+
+            # reset the flags register
+            self.fl = 0
+
+            # set the equal flag
+            if self.ram[reg_a] == self.ram[reg_b]:
+                self.fl = self.fl | 0b00000001
+            
+            # set the less than flag
+            if self.ram[reg_a] < self.ram[reg_b]:
+                self.fl = self.fl | 0b00000100
+
+            # set the greater than flag
+            if self.ram[reg_a] > self.ram[reg_b]:
+                self.fl = self.fl | 0b00000010
 
         else:
             raise Exception("Unsupported ALU operation")
