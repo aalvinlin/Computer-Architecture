@@ -47,6 +47,35 @@ class CPU:
         def ldi(register, value):
             self.ram[register] = value
 
+        def is_equal():
+            return self.fl & 0b00000001
+        
+        def is_less_than():
+            return self.fl & 0b00000100
+        
+        def is_greater_than():
+            return self.fl & 0b00000010
+        
+        def jeq(register):
+            if is_equal():
+                self.pc = self.ram[register]
+
+        def jge(register):
+            if is_greater_than() or is_equal():
+                self.pc = self.ram[register]
+
+        def jgt(register):
+            if is_greater_than():
+                self.pc = self.ram[register]
+
+        def jle(register):
+            if is_less_than() or is_equal():
+                self.pc = self.ram[register]
+
+        def jlt(register):
+            if is_less_than():
+                self.pc = self.ram[register]
+
         def jmp(register):
             self.pc = self.ram[register]
 
@@ -83,7 +112,7 @@ class CPU:
         self.instructions[0b01100101] = lambda operand_a, operand_b: self.alu("INC", operand_a)
         self.instructions["INT"] = None
         self.instructions["IRET"] = None
-        self.instructions["JEQ"] = None
+        self.instructions["JEQ"] = jeq
         self.instructions["JGE"] = None
         self.instructions["JGT"] = None
         self.instructions["JLE"] = None
