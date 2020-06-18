@@ -29,14 +29,16 @@ class CPU:
         # define instructions
         
         def call(register):
-            # push return location onto stack
-            # this location will be 2 instructions after the stack pointer
-            # self.sp -= 1
-            # self.ram[self.sp] = self.ram[self.pc + 2]
-            push(self.pc + 2)
 
+            # store the line to return to onto the stack
+            # can't use push() because it stores the contents of the line instead
+            self.sp -= 1
+            self.ram[self.sp] = self.pc + 2
+            
             # get the address to call
             register_containing_address = self.ram[self.pc + 1]
+
+            # set program counter to address of the subroutine
             self.pc = self.ram[register_containing_address]
 
         def hlt():
@@ -60,7 +62,10 @@ class CPU:
             self.ram[self.sp] = self.ram[register]
         
         def ret():
+            # set program counter to the last-pushed value on the stack, which is the line to return to
             self.pc = self.ram[self.sp]
+
+            # increment stack pointer by one
             self.sp += 1
 
         # hold a mapping of instructions to functions
@@ -160,7 +165,7 @@ class CPU:
         ), end='')
 
         for i in range(8):
-            print(" %02X" % self.reg[i], end='')
+            print(" %02X" % self.registers[i], end='')
 
         print()
 
