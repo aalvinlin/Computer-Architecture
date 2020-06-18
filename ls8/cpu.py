@@ -44,6 +44,9 @@ class CPU:
         def hlt():
             self.is_running = False
 
+        def ld(register1, register2):
+            self.ram[register1] = self.ram[register2]
+
         def ldi(register, value):
             self.ram[register] = value
 
@@ -63,31 +66,31 @@ class CPU:
             if is_equal():
                 self.pc = self.ram[register]
             else:
-                self.pc += 1
+                self.pc += 2
 
         def jge(register):
             if is_greater_than() or is_equal():
                 self.pc = self.ram[register]
             else:
-                self.pc += 1
+                self.pc += 2
 
         def jgt(register):
             if is_greater_than():
                 self.pc = self.ram[register]
             else:
-                self.pc += 1
+                self.pc += 2
 
         def jle(register):
             if is_less_than() or is_equal():
                 self.pc = self.ram[register]
             else:
-                self.pc += 1
+                self.pc += 2
 
         def jlt(register):
             if is_less_than():
                 self.pc = self.ram[register]
             else:
-                self.pc += 1
+                self.pc += 2
 
         def jmp(register):
             self.pc = self.ram[register]
@@ -132,7 +135,7 @@ class CPU:
         self.instructions[0b01011000] = jlt
         self.instructions[0b01010100] = jmp
         self.instructions["JNE"] = None
-        self.instructions["LD"] = None
+        self.instructions[0b10000011] = ld
         self.instructions[0b10000010] = ldi
         self.instructions["MOD"] = lambda operand_a, operand_b: self.alu("MOD", operand_a, operand_b)
         self.instructions[0b10100010] = lambda operand_a, operand_b: self.alu("MUL", operand_a, operand_b)
