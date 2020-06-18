@@ -105,7 +105,7 @@ class CPU:
         self.instructions[0b10100000] = lambda operand_a, operand_b: self.alu("ADD", operand_a, operand_b)
         self.instructions["AND"] = None
         self.instructions[0b01010000] = call
-        self.instructions[0b10100111] = lambda operand_a, operand_b: self.alu("CMP", operand_a)
+        self.instructions[0b10100111] = lambda operand_a, operand_b: self.alu("CMP", operand_a, operand_b)
         self.instructions[0b01100110] = lambda operand_a, operand_b: self.alu("DEC", operand_a)
         self.instructions[0b10100011] = lambda operand_a, operand_b: self.alu("DIV", operand_a, operand_b)
         self.instructions[0b00000001] = hlt
