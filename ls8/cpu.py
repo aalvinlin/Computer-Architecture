@@ -70,7 +70,7 @@ class CPU:
         self.instructions[0b01010000] = call
         self.instructions["CMP"] = None
         self.instructions["DEC"] = None
-        self.instructions["DIV"] = None
+        self.instructions[0b10100011] = lambda operand_a, operand_b: self.alu("DIV", operand_a, operand_b)
         self.instructions[0b00000001] = hlt
         self.instructions["INC"] = None
         self.instructions["INT"] = None
@@ -84,7 +84,7 @@ class CPU:
         self.instructions["JNE"] = None
         self.instructions["LD"] = None
         self.instructions[0b10000010] = ldi
-        self.instructions["MOD"] = None
+        self.instructions["MOD"] = lambda operand_a, operand_b: self.alu("MOD", operand_a, operand_b)
         self.instructions[0b10100010] = lambda operand_a, operand_b: self.alu("MUL", operand_a, operand_b)
         self.instructions["NOP"] = None
         self.instructions["NOT"] = None
@@ -97,7 +97,7 @@ class CPU:
         self.instructions["SHL"] = None
         self.instructions["SHR"] = None
         self.instructions["ST"] = None
-        self.instructions["SUB"] = None
+        self.instructions[0b10100001] = lambda operand_a, operand_b: self.alu("SUB", operand_a, operand_b)
         self.instructions["XOR"] = None
 
     # retrieve the value stored in the specifed register, and store it in the MDR register
@@ -126,11 +126,21 @@ class CPU:
         if op == "ADD":
             self.ram[reg_a] += self.ram[reg_b]
         elif op == "SUB":
-            pass
+            self.ram[reg_a] -= self.ram[reg_b]
         elif op == "MUL":
             self.ram[reg_a] *= self.ram[reg_b]
         elif op == "DIV":
-            pass
+            if reg_b == 0:
+                print("Cannot divide by zero.")
+                self.instructions[0b00000001]() # halt
+            else:
+                self.ram[reg_a] = self.ram[reg_a] // self.ram[reg_b]
+        elif op == "MOD":
+            if reg_b == 0:
+                print("Cannot mod by zero.")
+                self.instructions[0b00000001]() # halt
+            else:
+                self.ram[reg_a] %= self.ram[reg_b]
         else:
             raise Exception("Unsupported ALU operation")
 
