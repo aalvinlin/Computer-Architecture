@@ -122,10 +122,10 @@ class CPU:
         self.instructions["AND"] = None
         self.instructions[0b01010000] = call
         self.instructions[0b10100111] = lambda operand_a, operand_b: self.alu("CMP", operand_a, operand_b)
-        self.instructions[0b01100110] = lambda operand_a, operand_b: self.alu("DEC", operand_a)
+        self.instructions[0b01100110] = lambda operand_a: self.alu("DEC", operand_a)
         self.instructions[0b10100011] = lambda operand_a, operand_b: self.alu("DIV", operand_a, operand_b)
         self.instructions[0b00000001] = hlt
-        self.instructions[0b01100101] = lambda operand_a, operand_b: self.alu("INC", operand_a)
+        self.instructions[0b01100101] = lambda operand_a: self.alu("INC", operand_a)
         self.instructions["INT"] = None
         self.instructions["IRET"] = None
         self.instructions[0b01010101] = jeq
@@ -173,7 +173,7 @@ class CPU:
             self.ram[address] = instruction
             address += 1
 
-    def alu(self, op, reg_a, reg_b):
+    def alu(self, op, reg_a, reg_b=None):
         """ALU operations."""
 
         if op == "ADD":
