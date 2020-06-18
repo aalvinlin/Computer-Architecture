@@ -57,24 +57,37 @@ class CPU:
             return self.fl & 0b00000010
         
         def jeq(register):
+
+            print("in JEQ:", is_equal())
+
             if is_equal():
                 self.pc = self.ram[register]
+            else:
+                self.pc += 1
 
         def jge(register):
             if is_greater_than() or is_equal():
                 self.pc = self.ram[register]
+            else:
+                self.pc += 1
 
         def jgt(register):
             if is_greater_than():
                 self.pc = self.ram[register]
+            else:
+                self.pc += 1
 
         def jle(register):
             if is_less_than() or is_equal():
                 self.pc = self.ram[register]
+            else:
+                self.pc += 1
 
         def jlt(register):
             if is_less_than():
                 self.pc = self.ram[register]
+            else:
+                self.pc += 1
 
         def jmp(register):
             self.pc = self.ram[register]
@@ -228,6 +241,8 @@ class CPU:
         """Run the CPU."""
 
         while self.is_running:
+
+            print("self.pc:", self.pc)
 
             # store memory address in instruction register
             self.ir = self.ram_read(self.pc)
