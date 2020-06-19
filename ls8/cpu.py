@@ -95,6 +95,12 @@ class CPU:
         def jmp(register):
             self.pc = self.ram[register]
 
+        def jne(register):
+            if not is_equal():
+                self.pc = self.ram[register]
+            else:
+                self.pc += 2
+
         def pop(register):
             self.ram[register] = self.ram[self.sp]
             self.sp += 1
@@ -134,7 +140,7 @@ class CPU:
         self.instructions[0b01011001] = jle
         self.instructions[0b01011000] = jlt
         self.instructions[0b01010100] = jmp
-        self.instructions["JNE"] = None
+        self.instructions[0b01010110] = jne
         self.instructions[0b10000011] = ld
         self.instructions[0b10000010] = ldi
         self.instructions["MOD"] = lambda operand_a, operand_b: self.alu("MOD", operand_a, operand_b)
