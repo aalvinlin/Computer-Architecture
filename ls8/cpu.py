@@ -101,6 +101,9 @@ class CPU:
             else:
                 self.pc += 2
 
+        def nop():
+            pass
+
         def pop(register):
             self.ram[register] = self.ram[self.sp]
             self.sp += 1
@@ -153,7 +156,7 @@ class CPU:
         self.instructions[0b10000010] = ldi
         self.instructions[0b10100100] = lambda operand_a, operand_b: self.alu("MOD", operand_a, operand_b)
         self.instructions[0b10100010] = lambda operand_a, operand_b: self.alu("MUL", operand_a, operand_b)
-        self.instructions["NOP"] = None
+        self.instructions[0b00000000] = nop
         self.instructions[0b01101001] = lambda operand_a: self.alu("NOT", operand_a)
         self.instructions[0b10101010] = lambda operand_a, operand_b: self.alu("OR", operand_a, operand_b)
         self.instructions[0b01000110] = pop
