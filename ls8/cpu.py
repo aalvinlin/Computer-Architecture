@@ -133,7 +133,7 @@ class CPU:
         # hold a mapping of instructions to functions
         self.instructions = dict()
         self.instructions[0b10100000] = lambda operand_a, operand_b: self.alu("ADD", operand_a, operand_b)
-        self.instructions["AND"] = None
+        self.instructions[0b10101000] = lambda operand_a, operand_b: self.alu("AND", operand_a, operand_b)
         self.instructions[0b01010000] = call
         self.instructions[0b10100111] = lambda operand_a, operand_b: self.alu("CMP", operand_a, operand_b)
         self.instructions[0b01100110] = lambda operand_a: self.alu("DEC", operand_a)
@@ -151,11 +151,11 @@ class CPU:
         self.instructions[0b01010110] = jne
         self.instructions[0b10000011] = ld
         self.instructions[0b10000010] = ldi
-        self.instructions["MOD"] = lambda operand_a, operand_b: self.alu("MOD", operand_a, operand_b)
+        self.instructions[0b10100100] = lambda operand_a, operand_b: self.alu("MOD", operand_a, operand_b)
         self.instructions[0b10100010] = lambda operand_a, operand_b: self.alu("MUL", operand_a, operand_b)
         self.instructions["NOP"] = None
-        self.instructions["NOT"] = None
-        self.instructions["OR"] = None
+        self.instructions[0b01101001] = lambda operand_a: self.alu("NOT", operand_a)
+        self.instructions[0b10101010] = lambda operand_a, operand_b: self.alu("OR", operand_a, operand_b)
         self.instructions[0b01000110] = pop
         self.instructions[0b01001000] = pra
         self.instructions[0b01000111] = prn
@@ -165,7 +165,7 @@ class CPU:
         self.instructions["SHR"] = None
         self.instructions[0b10000100] = st
         self.instructions[0b10100001] = lambda operand_a, operand_b: self.alu("SUB", operand_a, operand_b)
-        self.instructions["XOR"] = None
+        self.instructions[0b10101011] = lambda operand_a, operand_b: self.alu("XOR", operand_a, operand_b)
 
     # retrieve the value stored in the specifed register, and store it in the MDR register
     def ram_read(self, address):
@@ -230,6 +230,16 @@ class CPU:
             # set the greater than flag
             if self.ram[reg_a] > self.ram[reg_b]:
                 self.fl = self.fl | 0b00000010
+
+        elif op == "AND":
+            self.ram[reg_a] &= self.ram[reg_b]
+        elif op == "OR":
+            self.ram[reg_a] |= self.ram[reg_b]
+        elif op == "NOT":
+            self.ram[reg_a] ~= self.ram[reg_a]
+        elif op == "XOR":
+            self.ram[reg_a] ^= self.ram[reg_b]
+            
 
         else:
             raise Exception("Unsupported ALU operation")
