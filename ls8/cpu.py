@@ -56,6 +56,10 @@ class CPU:
         def ldi(register, value):
             self.ram[register] = value
 
+        def interrupt(register):
+            # self.is = self.ram[register]
+            pass
+
         def iret():
             # restore registers R6 to R0
             pop(self.registers[6])
@@ -165,7 +169,7 @@ class CPU:
         self.instructions[0b10100011] = lambda operand_a, operand_b: self.alu("DIV", operand_a, operand_b)
         self.instructions[0b00000001] = hlt
         self.instructions[0b01100101] = lambda operand_a: self.alu("INC", operand_a)
-        self.instructions["INT"] = None
+        self.instructions[0b01010010] = interrupt
         self.instructions[0b00010011] = iret
         self.instructions[0b01010101] = jeq
         self.instructions[0b01011010] = jge
