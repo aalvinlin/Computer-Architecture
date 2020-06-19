@@ -122,6 +122,14 @@ class CPU:
             # increment stack pointer by one
             self.sp += 1
 
+        def st(register1, register2):
+
+            value_stored_in_register2 = self.ram[register2]
+            address_to_store_value_in = self.ram[register1]
+
+            self.ram[address_to_store_value_in] = value_stored_in_register2
+
+
         # hold a mapping of instructions to functions
         self.instructions = dict()
         self.instructions[0b10100000] = lambda operand_a, operand_b: self.alu("ADD", operand_a, operand_b)
@@ -155,7 +163,7 @@ class CPU:
         self.instructions[0b00010001] = ret
         self.instructions["SHL"] = None
         self.instructions["SHR"] = None
-        self.instructions["ST"] = None
+        self.instructions[0b10000100] = st
         self.instructions[0b10100001] = lambda operand_a, operand_b: self.alu("SUB", operand_a, operand_b)
         self.instructions["XOR"] = None
 
