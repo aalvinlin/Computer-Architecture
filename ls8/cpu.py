@@ -161,8 +161,8 @@ class CPU:
         self.instructions[0b01000111] = prn
         self.instructions[0b01000101] = push
         self.instructions[0b00010001] = ret
-        self.instructions["SHL"] = None
-        self.instructions["SHR"] = None
+        self.instructions[0b10101100] = lambda operand_a: self.alu("SHL", operand_a)
+        self.instructions[0b10101101] = lambda operand_a: self.alu("SHR", operand_a)
         self.instructions[0b10000100] = st
         self.instructions[0b10100001] = lambda operand_a, operand_b: self.alu("SUB", operand_a, operand_b)
         self.instructions[0b10101011] = lambda operand_a, operand_b: self.alu("XOR", operand_a, operand_b)
@@ -239,6 +239,11 @@ class CPU:
             self.ram[reg_a] ~= self.ram[reg_a]
         elif op == "XOR":
             self.ram[reg_a] ^= self.ram[reg_b]
+
+        elif op == "SHL":
+            self.ram[reg_a] <<= self.ram[reg_a]
+        elif op == "SHR":
+            self.ram[reg_a] >>= self.ram[reg_a]
             
 
         else:
