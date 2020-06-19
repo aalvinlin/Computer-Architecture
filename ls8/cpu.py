@@ -239,7 +239,7 @@ class CPU:
         elif op == "OR":
             self.ram[reg_a] |= self.ram[reg_b]
         elif op == "NOT":
-            self.ram[reg_a] ~= self.ram[reg_a]
+            self.ram[reg_a] = ~self.ram[reg_a]
         elif op == "XOR":
             self.ram[reg_a] ^= self.ram[reg_b]
 
