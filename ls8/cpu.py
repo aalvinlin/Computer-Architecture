@@ -45,7 +45,10 @@ class CPU:
             self.is_running = False
 
         def ld(register1, register2):
-            self.ram[register1] = self.ram[register2]
+
+            adresss_stored_in_register2 = self.ram[register2]
+
+            self.ram[register1] = self.ram[adresss_stored_in_register2]
 
         def ldi(register, value):
             self.ram[register] = value
@@ -60,9 +63,6 @@ class CPU:
             return self.fl & 0b00000010
         
         def jeq(register):
-
-            print("in JEQ:", is_equal())
-
             if is_equal():
                 self.pc = self.ram[register]
             else:
@@ -245,7 +245,7 @@ class CPU:
 
         while self.is_running:
 
-            print("self.pc:", self.pc)
+            # print("self.pc:", self.pc)
 
             # store memory address in instruction register
             self.ir = self.ram_read(self.pc)
