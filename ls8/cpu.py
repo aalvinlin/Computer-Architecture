@@ -26,6 +26,9 @@ class CPU:
         # HALT will set this variable to false
         self.is_running = True
 
+        # keep track of whether an interrupt is occuring
+        self.is_interrupted = False
+
         # define instructions
         
         def call(register):
@@ -52,6 +55,25 @@ class CPU:
 
         def ldi(register, value):
             self.ram[register] = value
+
+        def iret():
+            # restore registers R6 to R0
+            pop(self.registers[6])
+            pop(self.registers[5])
+            pop(self.registers[4])
+            pop(self.registers[3])
+            pop(self.registers[2])
+            pop(self.registers[1])
+            pop(self.registers[0])
+
+            # restore FL register
+            pop(self.fl)
+
+            # restore program counter
+            pop(self.pc)
+
+            # re-enable interrupts
+            self.is_interrupted = False
 
         def is_equal():
             return self.fl & 0b00000001
@@ -144,7 +166,7 @@ class CPU:
         self.instructions[0b00000001] = hlt
         self.instructions[0b01100101] = lambda operand_a: self.alu("INC", operand_a)
         self.instructions["INT"] = None
-        self.instructions["IRET"] = None
+        self.instructions[0b00010011] = iret
         self.instructions[0b01010101] = jeq
         self.instructions[0b01011010] = jge
         self.instructions[0b01010111] = jgt
